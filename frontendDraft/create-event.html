@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Event • DivDadRockEvents</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style/styles.css" />
+  <style>
+    .cover {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #f1f3f5;
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="py-3 mb-3 border-bottom bg-white">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div><a href="index.html" class="fw-bold text-dark">DivDadRockEvents</a></div>
+      <nav class="d-flex gap-3">
+        <a href="index.html" class="link-secondary">Home</a>
+        <a href="create-event.html" class="link-secondary">Create Event</a>
+        <a href="bookings.html" class="link-secondary">My Bookings</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    <h1 class="h4 mb-3">Create / Update Event</h1>
+    
+    <form id="eventForm" class="row g-3">
+      <div class="col-12 col-lg-7">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="h6 mb-3">Event Details</h2>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Event title</label>
+              <input id="title" name="title" type="text" class="form-control" placeholder="">
+            </div>
+
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="artist" class="form-label">Artist</label>
+                <input id="artist" name="artist" type="text" class="form-control" placeholder="">
+              </div>
+              <div class="col-sm-6">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" name="category" class="form-select">
+                  <option value="">Select…</option>
+                  <option value="linkin-park">Linkin Park</option>
+                  <option value="seether">Seether</option>
+                  <option value="paramore">Paramore</option>
+                  <option value="pearl-jam">Pearl Jam</option>
+                  <option value="alice-in-chains">Alice in Chains</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-sm-4">
+                <label for="date" class="form-label">Date</label>
+                <input id="date" name="date" type="text" class="form-control" placeholder="DD/MM/YYYY">
+              </div>
+              <div class="col-sm-4">
+                <label for="start" class="form-label">Start time</label>
+                <input id="start" name="start" type="text" class="form-control" placeholder="">
+              </div>
+              <div class="col-sm-4">
+                <label for="end" class="form-label">End time</label>
+                <input id="end" name="end" type="text" class="form-control" placeholder="">
+              </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+              <div class="col-sm-8">
+                <label for="venue" class="form-label">Venue</label>
+                <input id="venue" name="venue" type="text" class="form-control" placeholder="">
+              </div>
+              <div class="col-sm-4">
+                <label for="tickets" class="form-label">Tickets available</label>
+                <input id="tickets" name="tickets" type="number" min="0" class="form-control" value="">
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <label for="desc" class="form-label">Description</label>
+              <textarea id="desc" name="desc" rows="3" class="form-control" placeholder=""></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-5">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="h6 mb-3">Cover Image</h2>
+            <div class="mb-3">
+              <img id="coverPreview" src="static/img/linkin-park-meteora.jpg" alt="Linkin Park Meteora Cover" class="cover">
+            </div>
+
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary" type="button">Save</button>
+              <button class="btn btn-outline-secondary" type="button">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <footer class="border-top bg-white">
+    <div class="container py-3 small text-muted">© 2025 Zane Cargill</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
