@@ -8,9 +8,15 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True, nullable=False)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False) #128 length for hashed passwords
+    def set_password(self, raw_password, hasher):
+        self.password = hasher(raw_password)
+    
+    def check_password(self, raw_password, checker):
+        return checker(self.password, raw_password)
 # class Event(db.Model):
 #     pass
 # class Comment(db.Model):
 #     pass
 # class Order(db.Model):
 #     pass
+    

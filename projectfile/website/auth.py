@@ -15,12 +15,12 @@ def login():
     login_form = LoginForm()
     error = None
     if login_form.validate_on_submit():
-        user_name = login_form.user_name.data
+        user_name = login_form.username.data
         password = login_form.password.data
-        user = db.session.scalar(db.select(User).where(User.name == user_name))
+        user = db.session.scalar(db.select(User).where(User.username == user_name))
         if user is None:
             error = 'Incorrect user name'
-        elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
+        elif not check_password_hash(user.password, password): # takes the hash and cleartext password
             error = 'Incorrect password'
         if error is None:
             login_user(user)
@@ -31,3 +31,26 @@ def login():
         else:
             flash(error)
     return render_template('user.html', form=login_form, heading='Login')
+                           
+                           
+@auth_bp.route('/register', methods=['GET', 'POST']) 
+def register():
+    form = RegisterForm()
+    error = None
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        existing = db.session.scalar(db.select(User).where((User.username == username) | (User.email == email)))
+        if existing:
+            error = 'Username or email already taken'
+        if error is None:
+            hashed = generate_password_hash(password)
+            user = User(username=username, email=email, password=hashed)
+            db.session.add(user)
+            db.session.commit()
+            flash('Registration successful. Please log in.')
+            return redirect(url_for('auth.login'))
+        else:
+            flash(error)
+    return render_template('user.html', form=form, heading='Register')
