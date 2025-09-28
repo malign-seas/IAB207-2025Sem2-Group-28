@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, render_template, request, url_for, redirect
-from flask_bcrypt import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
 from .models import User
 from .forms import LoginForm, RegisterForm
@@ -17,17 +17,16 @@ def login():
     if login_form.validate_on_submit():
         user_name = login_form.user_name.data
         password = login_form.password.data
-        user = db.session.scalar(db.select(User).where(User.name==user_name))
+        user = db.session.scalar(db.select(User).where(User.name == user_name))
         if user is None:
             error = 'Incorrect user name'
         elif not check_password_hash(user.password_hash, password): # takes the hash and cleartext password
             error = 'Incorrect password'
         if error is None:
             login_user(user)
-            nextp = request.args.get('next') # this gives the url from where the login page was accessed
-            print(nextp)
-            if next is None or not nextp.startswith('/'):
-                return redirect(url_for('index'))
+            nextp = request.args.get('next')
+            if not nextp or not nextp.startswith('/'):
+                return redirect(url_for('main.index'))
             return redirect(nextp)
         else:
             flash(error)
