@@ -15,6 +15,21 @@
         <!-- Navbar -->
         <nav>
             <!-- Your navbar should go here -->
+    
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">IAB207</a>
+                <div class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                        <span class = "navbar-text me-3">Welcome, {{ current_user.username }}!</span>"
+                        <a class = "nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                    {% else %}
+                        <a class = "nav-link" href = "{{ url_for('auth.login')}}">Login</a>
+                        <a class = "nav-link" href = "{{ url_for('auth.register')}}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
         </nav>
         <!-- Code for using Flask flash -->
         <div class="container-fluid">

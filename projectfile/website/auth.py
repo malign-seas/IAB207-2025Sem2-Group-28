@@ -30,8 +30,7 @@ def login():
             return redirect(nextp)
         else:
             flash(error)
-    return render_template('user.html', form=login_form, heading='Login')
-                           
+    return render_template('user.html', form=login_form, heading='Login')                         
                            
 @auth_bp.route('/register', methods=['GET', 'POST']) 
 def register():
@@ -54,3 +53,10 @@ def register():
         else:
             flash(error)
     return render_template('user.html', form=form, heading='Register')
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))  

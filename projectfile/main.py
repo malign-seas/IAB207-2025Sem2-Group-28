@@ -6,7 +6,7 @@ if __name__ == '__main__':
     app.run()
 
 # create database terminal commands
-# python3
+# python
 # >>> from website import db, create_app
 # >>> app = create_app()
 # >>> ctx = app.app_context()
