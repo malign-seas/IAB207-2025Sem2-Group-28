@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <a href="javascript:history.back()" class="small link-secondary">← Back</a>
+
+  <h1 class="h3 mt-3">{{ event.name }}</h1>
+
+  <div class="mb-2">
+    <span class="badge {{ 'bg-success' if event.open else 'bg-secondary' }}">
+      {{ 'Open' if event.open else 'Sold Out' }}
+    </span>
+    {% if event.category %}
+    <span class="badge bg-primary">{{ event.category }}</span>
+    {% endif %}
+  </div>
+
+  <ul class="list-unstyled mb-3">
+    {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
+    {% if event.time %}<li><strong>Time:</strong> {{ event.time }}</li>{% endif %}
+    {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
+    <li><strong>Tickets left:</strong> <span id="ticketsLeft">{{ event.tickets_left }}</span></li>
+  </ul>
+
+  <p>{{ event.description }}</p>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Book this event</h2>
+      <div id="alertBox" class="alert d-none" role="alert"></div>
+      <div class="row g-3 align-items-end">
+        <div class="col-6 col-md-4">
+          <label for="qty" class="form-label">Tickets</label>
+          <input id="qty" type="number" class="form-control" min="1" value="1" {{ 'disabled' if not event.open }}>
+        </div>
+        <div class="col-auto">
+          <button id="bookBtn" class="btn btn-success" {{ 'disabled' if not event.open }}>Book</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const ticketsLeftEl = document.getElementById('ticketsLeft');
+  const qtyEl = document.getElementById('qty');
+  const alertBox = document.getElementById('alertBox');
+  const bookBtn = document.getElementById('bookBtn');
+  if (!bookBtn) return;
+  let ticketsLeft = parseInt(ticketsLeftEl.textContent || '0', 10);
+
+  function show(type, msg) {
+    alertBox.className = 'alert alert-' + type;
+    alertBox.textContent = msg;
+    alertBox.classList.remove('d-none');
+  }
+
+  bookBtn.addEventListener('click', function () {
+    const qty = parseInt(qtyEl.value || '0', 10);
+    if (qty < 1) return show('warning', 'Please enter at least 1 ticket.');
+    if (qty > ticketsLeft) return show('danger', 'Not enough tickets left.');
+
+    const id = Math.floor(100000 + Math.random() * 900000);
+    ticketsLeft -= qty;
+    ticketsLeftEl.textContent = ticketsLeft;
+    show('success', 'Order confirmed: ID-' + id + ' for ' + qty + ' ticket(s).');
+
+    if (ticketsLeft === 0) {
+      bookBtn.disabled = true;
+    }
+  });
+})();
+</script>
+{% endblock %}
