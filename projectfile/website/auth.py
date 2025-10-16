@@ -35,15 +35,19 @@ def register():
     form = RegisterForm()
     error = None
     if form.validate_on_submit():
+        fname = form.firstname.data
+        lname = form.lastname.data
         username = form.username.data
         email = form.email.data
         password = form.password.data
+        phonenumber = form.phonenumber.data
+        streetaddress = form.streetaddress.data
         existing = db.session.scalar(db.select(User).where((User.username == username) | (User.email == email)))
         if existing:
             error = 'Username or email already taken'
         if error is None:
             hashed = generate_password_hash(password)
-            user = User(username=username, email=email, password=hashed)
+            user = User(fullname= f"{fname} {lname}", username=username, email=email, password=hashed, phone=phonenumber, streetaddress=streetaddress)
             db.session.add(user)
             db.session.commit()
             flash('Registration successful. Please log in.')

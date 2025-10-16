@@ -15,8 +15,12 @@ class LoginForm(FlaskForm):
 
  # this is the registration form
 class RegisterForm(FlaskForm):
+    firstname=StringField("First Name", validators=[InputRequired()])
+    lastname=StringField("Last Name", validators=[InputRequired()])
     username=StringField("User Name", validators=[InputRequired()])
     email = StringField("Email Address", validators=[Email("Please enter a valid email")])
+    phonenumber=StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15, message="Phone number should be between 10 and 15 digits")])
+    streetaddress=StringField("Street Address", validators=[InputRequired()])
     # linking two fields - password should be equal to data entered in confirm
     password=PasswordField("Password", validators=[InputRequired(),
                   EqualTo('confirm', message="Passwords should match")])
