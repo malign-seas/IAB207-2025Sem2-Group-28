@@ -1,2 +1,0 @@
-# IAB207-2025Sem2-Group-28
-Repo for IAB207 2025Sem2 Group 28
