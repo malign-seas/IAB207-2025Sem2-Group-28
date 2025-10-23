@@ -35,8 +35,7 @@ class EventCreationForm(FlaskForm):
     title=StringField("Title", validators=[InputRequired()])
     date=DateField("Date", format='%Y-%m-%d', validators=[InputRequired()]) 
     time=TimeField("Time", format='%H:%M')
-    venue=IntegerField("Venue", validators=[InputRequired()]) #Currently integer instead of string. Change later
+    venue=StringField("Venue", validators=[InputRequired()]) 
     genre=StringField("Genre", validators=[InputRequired()])
-    status=SelectField("Status", choices=[('open','Open'), ('sold_out','Sold Out'), ('cancelled','Cancelled'), ('closed','Closed')], validators=[InputRequired()])
     description=TextAreaField("Description", validators=[InputRequired()])
     submit = SubmitField("Create Event")

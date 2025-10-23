@@ -35,8 +35,8 @@ def create_app():
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    from .events import events   
-    app.register_blueprint(events)
+    from .events import events_bp
+    app.register_blueprint(events_bp)
 
     @app.errorhandler(404)
     def not_found(e):

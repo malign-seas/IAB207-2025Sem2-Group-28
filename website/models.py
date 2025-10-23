@@ -22,30 +22,30 @@ class User(db.Model, UserMixin):
     def check_password(self, raw_password, checker):
         return checker(self.password, raw_password)
 
-class Venue(db.Model):
-    __tablename__ = 'venues'
+# class Venue(db.Model):
+#     __tablename__ = 'venues'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    name = db.Column(db.String(150), nullable=False, index=True)
-    address = db.Column(db.String(255), nullable=False)
-    capacity = db.Column(db.Integer, nullable=False)
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+#     name = db.Column(db.String(150), nullable=False, index=True)
+#     address = db.Column(db.String(255), nullable=False)
+#     capacity = db.Column(db.Integer, nullable=False)
 
-    events = db.relationship('Event', backref='venue')
+#     events = db.relationship('Event', backref='venue')
 
-    def __repr__(self):
-        return f"<Venue name={self.name}, id={self.id}>"
+#     def __repr__(self):
+#         return f"<Venue name={self.name}, id={self.id}>"
 
-class Artist(db.Model):
-    __tablename__ = 'artists'
+# class Artist(db.Model):
+#     __tablename__ = 'artists'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, index=True)
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(100), nullable=False, index=True)
     
-    events = db.relationship('EventArtist', back_populates='artist')
+#     events = db.relationship('EventArtist', back_populates='artist')
 
 
-    def __repr__(self):
-        return f"<Artist name={self.name}, id={self.id}>"
+#     def __repr__(self):
+#         return f"<Artist name={self.name}, id={self.id}>"
 
 class Booking(db.Model):
     __tablename__ = 'bookings'
@@ -83,25 +83,26 @@ class Event(db.Model):
     genre = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='open') # could set this up as an enum
     image = db.Column(db.String(400))
+    venue = db.Column(db.String(80), nullable=False)
 
-    venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'), nullable=False)
+    #venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'), nullable=True)
     organizer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    artists = db.relationship('EventArtist', back_populates='event')
-    bookings = db.relationship('Booking', backref='event')
-    comments = db.relationship('Comment', backref='event')
+    #artists = db.relationship('EventArtist', back_populates='event')
+    #bookings = db.relationship('Booking', backref='event')
+    #comments = db.relationship('Comment', backref='event')
 
     def __repr__(self):
         return f"<Event title={self.title}, id={self.id}>"
     
-class EventArtist(db.Model):
-    __tablename__ = 'event_artists'
+# class EventArtist(db.Model):
+#     __tablename__ = 'event_artists'
     
-    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), primary_key=True)
+#     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), primary_key=True)
+#     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), primary_key=True)
     
-    event = db.relationship('Event', back_populates='artists')
-    artist = db.relationship('Artist', back_populates='events')
+#     event = db.relationship('Event', back_populates='artists')
+#     artist = db.relationship('Artist', back_populates='events')
 
 # class Event(db.Model):
 #     pass
