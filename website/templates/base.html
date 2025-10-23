@@ -27,7 +27,7 @@
                   <i class="fa-solid fa-user"></i>Logged in as: {{ current_user.username }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="" class="link-secondary">My Bookings</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('main.bookings_page') }}" class="link-secondary">My Bookings</a></li>
                     <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
                 </ul>
                 </div>

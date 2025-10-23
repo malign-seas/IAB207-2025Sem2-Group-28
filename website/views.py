@@ -14,3 +14,7 @@ def index():
 def get_user_list():
     demo_user = User(username="testuser1", email="demouser@example.com", password="hashedpassword1")
     return [demo_user]
+
+@main_bp.route('/bookings')
+def bookings_page():
+    return render_template('bookings.html')
