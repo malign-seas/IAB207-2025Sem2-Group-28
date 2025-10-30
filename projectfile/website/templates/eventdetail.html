@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Comment Test{% endblock %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+<div class="container mt-4">
+  <h3>Leave a Comment</h3>
+
+  {% if current_user.is_authenticated %}
+    {{ render_form(form, url_for('events.comment_test')) }}
+  {% else %}
+    <p><a href="{{ url_for('auth.login') }}">Log in</a> to post a comment.</p>
+  {% endif %}
+
+  <hr>
+
+  <h4>All Comments</h4>
+  {% for comment in comments %}
+    <div class="mb-3 border-bottom pb-2">
+      <strong>{{ comment.user.fullname }}</strong>
+      <span class="text-muted ml-2">
+        {{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+      </span>
+      <p>{{ comment.content }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -40,3 +40,8 @@ class EventCreationForm(FlaskForm):
     status=SelectField("Status", choices=[('open','Open'), ('sold_out','Sold Out'), ('cancelled','Cancelled'), ('closed','Closed')], validators=[InputRequired()])
     description=TextAreaField("Description", validators=[InputRequired()])
     submit = SubmitField("Create Event")
+
+#Form for creating a comment
+class CommentForm(FlaskForm):
+  content = TextAreaField('Comment', [InputRequired()])
+  submit = SubmitField('Create')
