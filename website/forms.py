@@ -1,6 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, FormField, IntegerField, DateField, TimeField, SelectField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRange
+from flask_wtf.file import FileRequired, FileField, FileAllowed
+
+ALLOWED_FILE = {'PNG', 'JPG', 'JPEG', 'png', 'jpg', 'jpeg'}
+
 
 # custom form for phone number field
 #class TelephoneForm(FlaskForm):
@@ -40,4 +44,5 @@ class EventCreationForm(FlaskForm):
     genre=StringField("Genre", validators=[InputRequired()])
     description=TextAreaField("Description", validators=[InputRequired()])
     tickets=IntegerField("Tickets Available:", validators=[InputRequired(), NumberRange(min=1, message="Tickets must be 1 or more")])
+    image = FileField('Event Image', validators=[FileRequired(message='Image cannot be empty'),FileAllowed(ALLOWED_FILE, message='Only supports PNG, JPG, png, jpg')])
     submit = SubmitField("Create Event")

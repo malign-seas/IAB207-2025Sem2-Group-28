@@ -22,6 +22,8 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
+    UPLOAD_FOLDER = '/static/img'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER 
     
     from .models import User
     @login_manager.user_loader

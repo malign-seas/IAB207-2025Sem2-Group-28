@@ -4,6 +4,8 @@ from . import db
 from .models import Event, User
 from .forms import EventCreationForm
 from flask_login import current_user
+import os
+from werkzeug.utils import secure_filename
 
 events_bp = Blueprint('events', __name__, url_prefix='/events')
 
@@ -28,9 +30,20 @@ def create(id):
         venue=form.venue.data
         tickets_left=form.tickets.data
 
-        event = Event(title=title, date=date, start_time=start_time, end_time=end_time, genre=genre, status=status, description=description, organizer_id=organizer_id, venue=venue, tickets_left=tickets_left)
+        db_file_path = check_upload_file(form)
+
+        event = Event(title=title, date=date, start_time=start_time, end_time=end_time, genre=genre, status=status, description=description, organizer_id=organizer_id, venue=venue, tickets_left=tickets_left, image=db_file_path)
         db.session.add(event)       
         db.session.commit()
         flash('Successfully created new event', 'success')
         return redirect(url_for('events.create', id=id))
     return render_template('create.html', id=id, form=form)
+
+def check_upload_file(form):
+  fp = form.image.data
+  filename = fp.filename
+  BASE_PATH = os.path.dirname(__file__)
+  upload_path = os.path.join(BASE_PATH, 'static/img', secure_filename(filename))
+  db_upload_path = '/static/img/' + secure_filename(filename)
+  fp.save(upload_path)
+  return db_upload_path
