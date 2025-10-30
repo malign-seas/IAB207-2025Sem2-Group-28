@@ -22,6 +22,8 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
+    UPLOAD_FOLDER = '/static/img'
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER 
     
     from .models import User
     @login_manager.user_loader
@@ -35,8 +37,8 @@ def create_app():
     from .auth import auth_bp
     app.register_blueprint(auth_bp)
 
-    from .events import events   
-    app.register_blueprint(events)
+    from .events import events_bp
+    app.register_blueprint(events_bp)
 
     @app.errorhandler(404)
     def not_found(e):

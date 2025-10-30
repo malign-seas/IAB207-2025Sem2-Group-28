@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template
 from .forms import LoginForm
 from .models import User
+from .models import Event
+from . import db
 
 main_bp = Blueprint('main', __name__)
 
@@ -8,8 +10,9 @@ main_bp = Blueprint('main', __name__)
 def index():
     login_form = LoginForm()
     users = get_user_list()
+    events = db.session.scalars(db.select(Event)).all()    
     #return render_template('base.html', html_form=login_form, title='login', users=users)
-    return render_template('index.html')
+    return render_template('index.html', events=events)
 
 def get_user_list():
     demo_user = User(username="testuser1", email="demouser@example.com", password="hashedpassword1")
