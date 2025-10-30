@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(10), nullable=False) #  unique=True, index=True - probably dont need a uniquness constraint on phone? if unique then indexing would be useful
     streetaddress = db.Column(db.String(255), nullable=False)
     
-    events = db.relationship('Event', backref='user')
+    #events = db.relationship('Event', backref='user')
     bookings = db.relationship('Booking', backref='user')
     comments = db.relationship('Comment', backref='user')
 
@@ -89,6 +89,7 @@ class Event(db.Model):
 
     #venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'), nullable=True)
     organizer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    organizer = db.relationship('User', backref='events')
 
     #artists = db.relationship('EventArtist', back_populates='event')
     #bookings = db.relationship('Booking', backref='event')

@@ -4,13 +4,11 @@
 {% block content %}
 <div class="container py-4">
   <a href="javascript:history.back()" class="small link-secondary">← Back</a>
-
   <div class="row g-4 align-items-start mt-1">
-    <div class="col-12 col-md-5 col-lg-4">
-      <img src="{{event.image}}" alt="Event image" class="cover img-fluid">
-    </div>
+    <!--Event Details-->
     <div class="col-12 col-md-7 col-lg-8">
       <h1 class="h3 mt-3">{{ event.title }}</h1>
+      <h6>Event organizer email: {{event.organizer.email}}</h6>
       <div class="d-flex align-items-center gap-2 mb-2">
         <span class="badge {{ 'bg-success' if event.status else 'bg-secondary' }}">
           {{ 'Open' if event.status else 'Sold Out' }}
@@ -27,7 +25,12 @@
         {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
         <li><strong>Tickets left:</strong> <span id="ticketsLeft">{{ event.tickets_left }}</span></li>
       </ul>
+      <h4 class="border-top pt-3">Details</h4>
       <p>{{ event.description }}</p>
+    </div>
+    <!--Event Image-->
+    <div class="col-12 col-md-5 col-lg-4">
+      <img src="{{event.image}}" alt="Event image" class="cover img-fluid">
     </div>
   </div>
 
