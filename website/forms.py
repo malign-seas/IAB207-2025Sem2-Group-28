@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import TextAreaField, SubmitField, StringField, PasswordField, FormField, IntegerField, DateField, TimeField, SelectField
-from wtforms.validators import InputRequired, Length, Email, EqualTo
+from wtforms.validators import InputRequired, Length, Email, EqualTo, NumberRange
 
 # custom form for phone number field
 #class TelephoneForm(FlaskForm):
@@ -32,10 +32,12 @@ class RegisterForm(FlaskForm):
 
 # Form for creating an event
 class EventCreationForm(FlaskForm):
-    title=StringField("Title", validators=[InputRequired()])
+    title=StringField("Event Title", validators=[InputRequired()])
     date=DateField("Date", format='%Y-%m-%d', validators=[InputRequired()]) 
-    time=TimeField("Time", format='%H:%M')
+    starttime=TimeField("Start Time", format='%H:%M')
+    endtime=TimeField("End Time", format='%H:%M')
     venue=StringField("Venue", validators=[InputRequired()]) 
     genre=StringField("Genre", validators=[InputRequired()])
     description=TextAreaField("Description", validators=[InputRequired()])
+    tickets=IntegerField("Tickets Available:", validators=[InputRequired(), NumberRange(min=1, message="Tickets must be 1 or more")])
     submit = SubmitField("Create Event")

@@ -19,14 +19,16 @@ def create(id):
     if form.validate_on_submit():
         title=form.title.data
         date=form.date.data
-        time=form.time.data
+        start_time=form.starttime.data
+        end_time=form.endtime.data
         genre=form.genre.data
         status='open'
         description=form.description.data
         organizer_id = id
         venue=form.venue.data
+        tickets_left=form.tickets.data
 
-        event = Event(title=title, date=date, time=time, genre=genre, status=status, description=description, organizer_id=organizer_id, venue=venue)
+        event = Event(title=title, date=date, start_time=start_time, end_time=end_time, genre=genre, status=status, description=description, organizer_id=organizer_id, venue=venue, tickets_left=tickets_left)
         db.session.add(event)       
         db.session.commit()
         flash('Successfully created new event', 'success')

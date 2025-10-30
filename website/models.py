@@ -79,11 +79,13 @@ class Event(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
     date = db.Column(db.Date, nullable=False)
-    time = db.Column(db.Time, nullable=False)
+    start_time = db.Column(db.Time, nullable=False)
+    end_time = db.Column(db.Time, nullable=False)
     genre = db.Column(db.String(50), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='open') # could set this up as an enum
     image = db.Column(db.String(400))
     venue = db.Column(db.String(80), nullable=False)
+    tickets_left = db.Column(db.Integer, nullable=False)
 
     #venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'), nullable=True)
     organizer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
