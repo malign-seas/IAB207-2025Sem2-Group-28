@@ -5,25 +5,31 @@
 <div class="container py-4">
   <a href="javascript:history.back()" class="small link-secondary">← Back</a>
 
-  <h1 class="h3 mt-3">{{ event.name }}</h1>
+  <div class="row g-4 align-items-start mt-1">
+    <div class="col-12 col-md-5 col-lg-4">
+      <img src="{{event.image}}" alt="Event image" class="cover img-fluid">
+    </div>
+    <div class="col-12 col-md-7 col-lg-8">
+      <h1 class="h3 mt-3">{{ event.title }}</h1>
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="badge {{ 'bg-success' if event.status else 'bg-secondary' }}">
+          {{ 'Open' if event.status else 'Sold Out' }}
+        </span>
+        {% if event.genre %}
+        <span class="badge bg-primary">{{ event.genre }}</span>
+        {% endif %}
+      </div>
 
-  <div class="mb-2">
-    <span class="badge {{ 'bg-success' if event.status else 'bg-secondary' }}">
-      {{ 'Open' if event.status else 'Sold Out' }}
-    </span>
-    {% if event.genre %}
-    <span class="badge bg-primary">{{ event.genre }}</span>
-    {% endif %}
+      <ul class="list-unstyled mb-3">
+        {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
+        {% if event.start_time %}<li><strong>Start Time: </strong>{{ event.start_time }}{% endif %}
+        {% if event.end_time %}<li><strong>End Time: </strong>{{ event.end_time }}{% endif %}
+        {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
+        <li><strong>Tickets left:</strong> <span id="ticketsLeft">{{ event.tickets_left }}</span></li>
+      </ul>
+      <p>{{ event.description }}</p>
+    </div>
   </div>
-
-  <ul class="list-unstyled mb-3">
-    {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
-    {% if event.time %}<li><strong>Time:</strong> {{ event.time }}</li>{% endif %}
-    {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
-    <li><strong>Tickets left:</strong> <span id="ticketsLeft">{{ event.tickets_left }}</span></li>
-  </ul>
-
-  <p>{{ event.description }}</p>
 
   <div class="card mt-4">
     <div class="card-body">
