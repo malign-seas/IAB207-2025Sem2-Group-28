@@ -24,15 +24,15 @@ def create(id):
         start_time=form.starttime.data
         end_time=form.endtime.data
         genre=form.genre.data
-        status='open'
+        status='Open'
         description=form.description.data
-        organizer_id = id
+        organiser_id = id
         venue=form.venue.data
         tickets_left=form.tickets.data
 
         db_file_path = check_upload_file(form)
 
-        event = Event(title=title, date=date, start_time=start_time, end_time=end_time, genre=genre, status=status, description=description, organizer_id=organizer_id, venue=venue, tickets_left=tickets_left, image=db_file_path)
+        event = Event(title=title, date=date, start_time=start_time, end_time=end_time, genre=genre, status=status, description=description, organiser_id=organiser_id, venue=venue, tickets_left=tickets_left, image=db_file_path)
         db.session.add(event)       
         db.session.commit()
         flash('Successfully created new event', 'success')

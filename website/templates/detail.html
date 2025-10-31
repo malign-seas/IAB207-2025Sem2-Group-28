@@ -8,7 +8,7 @@
     <!--Event Details-->
     <div class="col-12 col-md-7 col-lg-8">
       <h1 class="h3 mt-3">{{ event.title }}</h1>
-      <h6>Event organizer email: {{event.organizer.email}}</h6>
+      <h6>Event organiser email: {{event.organiser.email}}</h6>
       <div class="d-flex align-items-center gap-2 mb-2">
         <span class="badge {{ 'bg-success' if event.status else 'bg-secondary' }}">
           {{ 'Open' if event.status else 'Sold Out' }}

@@ -82,14 +82,14 @@ class Event(db.Model):
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     genre = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='open') # could set this up as an enum
+    status = db.Column(db.String(20), nullable=False, default='Open') # could set this up as an enum
     image = db.Column(db.String(400))
     venue = db.Column(db.String(80), nullable=False)
     tickets_left = db.Column(db.Integer, nullable=False)
 
     #venue_id = db.Column(db.Integer, db.ForeignKey('venues.id'), nullable=True)
-    organizer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    organizer = db.relationship('User', backref='events')
+    organiser_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    organiser = db.relationship('User', backref='events')
 
     #artists = db.relationship('EventArtist', back_populates='event')
     #bookings = db.relationship('Booking', backref='event')
