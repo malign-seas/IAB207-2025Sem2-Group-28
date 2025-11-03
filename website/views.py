@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from .forms import LoginForm
 from .models import User
 from .models import Event
@@ -12,6 +12,12 @@ def index():
     users = get_user_list()
     events = db.session.scalars(db.select(Event)).all()    
     #return render_template('base.html', html_form=login_form, title='login', users=users)
+    return render_template('index.html', events=events)
+
+@main_bp.route('/search')
+def search():
+    query = "%" + request.args['search'] + "%"
+    events = db.session.scalars(db.select(Event).where(Event.title.like(query))).all()
     return render_template('index.html', events=events)
 
 def get_user_list():
