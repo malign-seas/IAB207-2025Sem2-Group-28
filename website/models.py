@@ -93,7 +93,7 @@ class Event(db.Model):
 
     #artists = db.relationship('EventArtist', back_populates='event')
     #bookings = db.relationship('Booking', backref='event')
-    #comments = db.relationship('Comment', backref='event')
+    comments = db.relationship('Comment', backref='event')
 
     def __repr__(self):
         return f"<Event title={self.title}, id={self.id}>"

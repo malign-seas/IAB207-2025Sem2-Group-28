@@ -1,19 +1,39 @@
 
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from . import db
-from .models import Event, User
-from .forms import EventCreationForm
+from .models import Event, User, Comment
+from .forms import EventCreationForm, CommentForm
 from flask_login import current_user
 import os
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 events_bp = Blueprint('events', __name__, url_prefix='/events')
 
 @events_bp.route('/<id>')
 def show(id):
     event = db.session.get(Event, id)
-    return render_template('detail.html', event=event)
+    form = CommentForm()  
+    return render_template('detail.html', event=event, form=form)
 
+@events_bp.route('/<id>/comment', methods=['GET', 'POST'])  
+def comment(id):
+    form = CommentForm()
+    event = db.session.scalar(db.select(Event).where(Event.id==id))
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            new_comment = Comment(
+                content=form.content.data,
+                user_id=current_user.id,
+                event_id=event.id,
+                created_at=datetime.now()
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for('events.show', id=id))
+        else:
+            return redirect(url_for('auth.login'))
+        
 @events_bp.route('/<id>/create', methods=['GET', 'POST'])
 def create(id):
     print('Method type: ', request.method)
