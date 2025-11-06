@@ -39,55 +39,10 @@
     </div>
   </div>
 
-  <!-- Booking Form -->
+   <!-- Booking Form -->
   <div class="card mt-4">
     <div class="card-body">
       <h2 class="h5 mb-3">Book this event</h2>
-      <div id="alertBox" class="alert d-none" role="alert"></div>
-      <div class="row g-3 align-items-end">
-        <div class="col-6 col-md-4">
-          <label for="qty" class="form-label">Tickets</label>
-          <input id="qty" type="number" class="form-control" min="1" value="1" {{ 'disabled' if not event.status }}>
-        </div>
-        <div class="col-auto">
-          <button id="bookBtn" class="btn btn-success" {{ 'disabled' if not event.status }}>Book</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="container mt-4">
-    <h3>Leave a Comment</h3>
-
-    {% if current_user.is_authenticated %}
-      {{ render_form(form,"/events/{0}/comment".format(event.id)) }}
-    {% else %}
-      <p><a href="{{ url_for('auth.login') }}">Log in</a> to post a comment.</p>
-    {% endif %}
-
-    <hr>
-
-    <h4>All Comments</h4>
-    {% for comment in event.comments %}
-      <div class="mb-3 border-bottom pb-2">
-        <strong>{{ comment.user.fullname }}</strong>
-        <span class="text-muted ml-2">
-          {{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}
-        </span>
-        <p>{{ comment.content }}</p>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-
-<script>
-(function () {
-  const ticketsLeftEl = document.getElementById('ticketsLeft');
-  const qtyEl = document.getElementById('qty');
-  const alertBox = document.getElementById('alertBox');
-  const bookBtn = document.getElementById('bookBtn');
-  if (!bookBtn) return;
-  let ticketsLeft = parseInt(ticketsLeftEl.textContent || '0', 10);
 
       {% if current_user.is_authenticated %}
         <form action="{{ url_for('events.book', id=event.id) }}" method="POST">
@@ -127,5 +82,30 @@
       {% endif %}
     </div>
   </div>
+
+  
+  <div class="container mt-4">
+    <h3>Leave a Comment</h3>
+
+    {% if current_user.is_authenticated %}
+      {{ render_form(form,"/events/{0}/comment".format(event.id)) }}
+    {% else %}
+      <p><a href="{{ url_for('auth.login') }}">Log in</a> to post a comment.</p>
+    {% endif %}
+
+    <hr>
+
+    <h4>All Comments</h4>
+    {% for comment in event.comments %}
+      <div class="mb-3 border-bottom pb-2">
+        <strong>{{ comment.user.fullname }}</strong>
+        <span class="text-muted ml-2">
+          {{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+        </span>
+        <p>{{ comment.content }}</p>
+      </div>
+    {% endfor %}
+  </div>
 </div>
+
 {% endblock %}
