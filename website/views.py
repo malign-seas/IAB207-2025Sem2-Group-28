@@ -1,23 +1,73 @@
-from flask import Blueprint, render_template
-from .forms import LoginForm
-from .models import User
-from .models import Event
+from flask import Blueprint, render_template, request
+from flask_login import login_required, current_user
 from . import db
+from .models import User, Event, Booking
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    login_form = LoginForm()
-    users = get_user_list()
-    events = db.session.scalars(db.select(Event)).all()    
-    #return render_template('base.html', html_form=login_form, title='login', users=users)
+    # home page: list all events
+    events = db.session.scalars(db.select(Event)).all()
     return render_template('index.html', events=events)
 
-def get_user_list():
-    demo_user = User(username="testuser1", email="demouser@example.com", password="hashedpassword1")
-    return [demo_user]
+@main_bp.route('/search')
+def search():
+    term = request.args.get('search', '')
+    q = f"%{term}%"
+    events = db.session.scalars(db.select(Event).where(Event.title.like(q))).all()
+    return render_template('index.html', events=events)
 
 @main_bp.route('/bookings')
-def bookings_page():
-    return render_template('bookings.html')
+@login_required
+def bookings():
+   
+    rows = (
+        db.session.query(Booking, Event)
+        .join(Event, Booking.event_id == Event.id)
+        .filter(Booking.user_id == current_user.id)
+        .order_by(Booking.booking_date.desc())
+        .all()
+    )
+    return render_template('bookings.html', bookings=rows)
+
+from flask import redirect, url_for, flash
+from flask_login import login_required, current_user
+from .models import Booking, Event
+from . import db
+
+@main_bp.route('/bookings/cancel_all', methods=['POST'])
+@login_required
+def cancel_all_bookings():
+    
+    bookings = Booking.query.filter_by(user_id=current_user.id).all()
+    if not bookings:
+        flash("You don't have any bookings to cancel.", "info")
+        return redirect(url_for('main.bookings'))
+
+    
+    for b in bookings:
+        ev = db.session.get(Event, b.event_id)
+        if ev:
+            ev.tickets_left += b.num_tickets
+        db.session.delete(b)
+
+    db.session.commit()
+    flash("All your bookings have been cancelled.", "success")
+    return redirect(url_for('main.bookings'))
+
+@main_bp.route('/bookings/<int:booking_id>/cancel', methods=['POST'])
+@login_required
+def cancel_booking(booking_id):
+
+    b = Booking.query.filter_by(id=booking_id, user_id=current_user.id).first_or_404()
+
+
+    ev = db.session.get(Event, b.event_id)
+    if ev:
+        ev.tickets_left += b.num_tickets
+
+    db.session.delete(b)
+    db.session.commit()
+    flash("Booking cancelled.", "success")
+    return redirect(url_for('main.bookings'))
