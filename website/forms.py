@@ -46,3 +46,8 @@ class EventCreationForm(FlaskForm):
     tickets=IntegerField("Tickets Available:", validators=[InputRequired(), NumberRange(min=1, message="Tickets must be 1 or more")])
     image = FileField('Event Image', validators=[FileRequired(message='Image cannot be empty'),FileAllowed(ALLOWED_FILE, message='Only supports PNG, JPG, png, jpg')])
     submit = SubmitField("Create Event")
+
+#Form for creating a comment
+class CommentForm(FlaskForm):
+    content = TextAreaField('Comment', [InputRequired()])
+    submit = SubmitField('Create')

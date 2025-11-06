@@ -5,8 +5,12 @@ from werkzeug.utils import secure_filename
 import os
 
 from . import db
-from .models import Event, User, Booking
-from .forms import EventCreationForm
+from .models import Event, User, Comment, Booking
+from .forms import EventCreationForm, CommentForm
+from flask_login import current_user
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 events_bp = Blueprint('events', __name__, url_prefix='/events')
 
@@ -15,10 +19,29 @@ events_bp = Blueprint('events', __name__, url_prefix='/events')
 @events_bp.route('/<int:id>')
 def show(id):
     event = db.session.get(Event, id)
+    form = CommentForm()  
     if not event:
         abort(404)
     return render_template('detail.html', event=event)
+    return render_template('detail.html', event=event, form=form)
 
+@events_bp.route('/<id>/comment', methods=['GET', 'POST'])  
+def comment(id):
+    form = CommentForm()
+    event = db.session.scalar(db.select(Event).where(Event.id==id))
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            new_comment = Comment(
+                content=form.content.data,
+                user_id=current_user.id,
+                event_id=event.id,
+                created_at=datetime.now()
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for('events.show', id=id))
+        else:
+            return redirect(url_for('auth.login'))
 
 @events_bp.route('/<int:id>/book', methods=['POST'])
 @login_required
@@ -27,8 +50,6 @@ def book(id):
     if not event:
         flash("Event not found.", "danger")
         return redirect(url_for("main.index"))
-
-  
     try:
         qty = int(request.form.get("tickets", 1))
     except (TypeError, ValueError):
@@ -55,7 +76,6 @@ def book(id):
 
     flash(f"You successfully booked {qty} ticket(s) for {event.title}.", "success")
     return redirect(url_for("main.bookings"))  
-
 
 
 @events_bp.route('/<int:id>/create', methods=['GET', 'POST'])
