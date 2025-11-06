@@ -22,7 +22,6 @@ def show(id):
     form = CommentForm()  
     if not event:
         abort(404)
-    return render_template('detail.html', event=event)
     return render_template('detail.html', event=event, form=form)
 
 @events_bp.route('/<id>/comment', methods=['GET', 'POST'])  
