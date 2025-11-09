@@ -23,7 +23,7 @@ def search():
     genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
-@main_bp.route('/genre-select')
+@main_bp.route('/genre-sort')
 def select_genre():
     genre = request.args.get('genre', 'all')
     if genre == "all" :
@@ -32,6 +32,12 @@ def select_genre():
         events = db.session.scalars(db.select(Event).where(Event.genre.like(genre))).all()
         genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
+
+@main_bp.route('/status-sort')
+def select_status():
+    status = request.args.get('status', 'all')
+    events = db.session.scalars(db.select(Event).where(Event.status.like(status))).all()
+    return render_template('index.html', events=events)
 
 @main_bp.route('/bookings')
 @login_required

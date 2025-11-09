@@ -34,11 +34,14 @@
     </div>
 
     <label class="form-label">Status:</label>
-    <form action="">
-      <button class="badge bg-success btn">Open</button>
-      <button class="badge bg-secondary btn">Sold Out</button>
-      <button class="badge bg-dark btn">Inactive</button>
-      <button class="badge bg-danger btn">Cancelled</button>
+    <form class="column" action="{{url_for('main.select_status')}}">
+        <div class="mb-3 form-group">
+          <button class="badge bg-success btn" name="status" value="Open">Open</button>
+          <button class="badge bg-secondary btn" name="status" value="Sold Out">Sold Out</button>
+          <button class="badge bg-dark btn" name="status" value="Inactive">Inactive</button>
+          <button class="badge bg-danger btn" name="status" value="Cancelled">Cancelled</button>
+        </select>
+      </div>
     </form>
     <hr>
     <div class="row g-3" id="grid">
