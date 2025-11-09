@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class = "container">
+    <div class = "row">
+        <div class = "col-6">
+            <h1>Error {{errorNumber}}</h1> <!-- Dynamic error number -->
+            <p>The page you are looking for could not be found. More info:</p>
+            <p>{{error}}</p>
+            <a href="{{ url_for('main.index') }}">Return to Home</a> <!-- Dynamic error message -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}

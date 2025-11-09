@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="h4 mb-3">Your Booking History</h1>
+
+{% if bookings %}
+  <form action="{{ url_for('main.cancel_all_bookings') }}" method="POST" class="mb-3">
+    {% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+    <button class="btn btn-outline-danger"
+            onclick="return confirm('Cancel ALL your bookings? This cannot be undone.');">
+      Cancel all bookings
+    </button>
+  </form>
+{% endif %}
+
+<div class="row g-3">
+  {% for booking, event in bookings %}
+    <div class="col-12 col-md-6">
+      <div class="card h-100">
+        <div class="card-body d-flex gap-3">
+          <img
+            src="{{ event.image or url_for('static', filename='img/placeholder.jpg') }}"
+            alt="{{ event.title }}" class="thumb">
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start">
+              <h2 class="h6 mb-1">{{ event.title }}</h2>
+              <span class="badge {{ 'bg-success' if event.status == 'Open' else
+                              'bg-secondary' if event.status == 'Sold Out' else
+                              'bg-danger' if event.status == 'Cancelled' else
+                              'bg-dark' if event.status == 'Inactive'
+                            }}">{{event.status}}</span>
+            </div>
+
+            <div class="small text-muted">
+              {% if event.date %}{{ event.date }}{% endif %}
+              {% if event.venue %} · {{ event.venue }}{% endif %}
+            </div>
+
+            <hr class="my-2">
+
+            <div class="small mb-2">
+              <strong>Order ID:</strong> ID-{{ "%06d"|format(booking.id) }}<br>
+              <strong>Tickets:</strong> {{ booking.num_tickets }}
+            </div>
+
+            <!-- Cancel individual booking button -->
+            <form action="{{ url_for('main.cancel_booking', booking_id=booking.id) }}"
+                  method="POST"
+                  onsubmit="return confirm('Cancel this booking?');">
+              {% if csrf_token %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              {% endif %}
+              <button class="btn btn-outline-danger btn-sm">Cancel booking</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>No Events Booked.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

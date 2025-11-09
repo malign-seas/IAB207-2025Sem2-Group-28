@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row g-3" id="grid">
+  {% for event in events %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="event">
+        <img src="{{event.image}}" alt="Event image" />
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <h3 class="mb-0">{{event.title}}</h3>
+          <span class="badge {{ 'bg-success' if event.status == 'Open' else
+                              'bg-secondary' if event.status == 'Sold Out' else
+                              'bg-danger' if event.status == 'Cancelled' else
+                              'bg-dark' if event.status == 'Inactive'
+                            }}">{{event.status}}</span>
+        </div>
+        <div class="meta">{{event.date}} · {{event.start_time}} - {{event.end_time}} · {{event.venue}}</div>
+        <div class="meta">Tickets left: {{event.tickets_left}}</div>
+        <div class="mt-2">
+              <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-sm btn-primary">Edit</a>
+              {% if event.status != 'Cancelled' %}
+              <form method="POST" action="{{ url_for('events.cancel_event', event_id=event.id) }}"
+                style="display:inline;">
+                {{ CancelEventForm().hidden_tag() }}
+                {{ CancelEventForm().submit(class="btn btn-sm btn-danger", value="Cancel") }}
+              </form>
+              {% else %}
+              <button class="btn btn-sm btn-secondary" disabled>Cancelled</button>
+              {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+  <div class="container mt-4">
+    <h2>Your Events</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Date</th>
+          <th>Venue</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+        <tr>
+          <td>{{ event.title }}</td>
+          <td>{{ event.date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ event.venue }}</td>
+          <td>
+            <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-sm btn-primary">Edit</a>
+            {% if event.status != 'Cancelled' %}
+            <form method="POST" action="{{ url_for('events.cancel_event', event_id=event.id) }}"
+              style="display:inline;">
+              {{ CancelEventForm().hidden_tag() }}
+              {{ CancelEventForm().submit(class="btn btn-sm btn-danger", value="Cancel") }}
+            </form>
+            {% else %}
+            <button class="btn btn-sm btn-secondary" disabled>Cancelled</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endblock %}

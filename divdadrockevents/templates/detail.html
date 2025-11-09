@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ event.name }}{% endblock %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block content %}
+<div class="container py-4">
+  <a href="javascript:history.back()" class="small link-secondary">← Back</a>
+
+  <div class="row g-4 align-items-start mt-1">
+    <!-- Event Details -->
+    <div class="col-12 col-md-7 col-lg-8">
+      <h1 class="h3 mt-3">{{ event.title }}</h1>
+      <h6>Event organiser email: {{ event.organiser.email }}</h6>
+
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="badge {{ 'bg-success' if event.status == 'Open' else
+                              'bg-secondary' if event.status == 'Sold Out' else
+                              'bg-danger' if event.status == 'Cancelled' else
+                              'bg-dark' if event.status == 'Inactive'
+                            }}">
+          {{ event.status }}
+        </span>
+        {% if event.genre %}
+          <span class="badge bg-primary">{{ event.genre }}</span>
+        {% endif %}
+      </div>
+
+      <ul class="list-unstyled mb-3">
+        {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
+        {% if event.start_time %}<li><strong>Start Time:</strong> {{ event.start_time }}</li>{% endif %}
+        {% if event.end_time %}<li><strong>End Time:</strong> {{ event.end_time }}</li>{% endif %}
+        {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
+        <li><strong>Tickets left:</strong> {{ event.tickets_left }}</li>
+      </ul>
+
+      <hr>
+      <h4>Details</h4>
+      <p>{{ event.description }}</p>
+    </div>
+
+    <!-- Event Image -->
+    <div class="col-12 col-md-5 col-lg-4">
+      <img src="{{ event.image }}" alt="Event image" class="cover img-fluid rounded">
+    </div>
+  </div>
+
+   <!-- Booking Form -->
+  <div class="card mt-4">
+    <div class="card-body">
+      <h4 class="mb-3">Book this event</h4>
+
+      {% if current_user.is_authenticated %}
+        <form action="{{ url_for('events.book', id=event.id) }}" method="POST">
+          {% if csrf_token %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          {% endif %}
+
+          <div class="row g-3 align-items-end">
+            <div class="col-6 col-md-4">
+              <label for="tickets" class="form-label">Tickets</label>
+              <input
+                id="tickets"
+                name="tickets"
+                type="number"
+                class="form-control"
+                min="1"
+                {% if event.tickets_left > 0 %}
+                max="{{ event.tickets_left }}"
+                {% else %}
+                
+                {% endif %}
+                value="1"
+                {% if event.status != 'Open' %}disabled{% endif %}>
+            </div>
+
+            <div class="col-auto">
+              <button
+                type="submit"
+                class="btn btn-success"
+                {% if event.status != 'Open' %}disabled{% endif %}>
+                Book
+              </button>
+            </div>
+          </div>
+        </form>
+
+      {% else %}
+        <p class="text-muted">
+          <a href="{{ url_for('auth.login') }}">Log in</a> to book tickets.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  
+  <div class="container mt-4">
+    <h4>Leave a Comment</h4>
+
+    {% if current_user.is_authenticated %}
+      {{ render_form(form,"/events/{0}/comment".format(event.id)) }}
+    {% else %}
+      <p><a href="{{ url_for('auth.login') }}">Log in</a> to post a comment.</p>
+    {% endif %}
+
+    <hr>
+
+    <h4>All Comments</h4>
+    {% for comment in event.comments %}
+      <div class="mb-3 border-bottom pb-2">
+        <strong>{{ comment.user.fullname }}</strong>
+        <span class="text-muted ml-2">
+          {{ comment.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+        </span>
+        <p>{{ comment.content }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
