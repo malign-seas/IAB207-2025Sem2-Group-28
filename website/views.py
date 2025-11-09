@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 from . import db
 from .models import User, Event, Booking
+from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
@@ -9,6 +10,7 @@ main_bp = Blueprint('main', __name__)
 def index():
     # home page: list all events
     events = db.session.scalars(db.select(Event)).all()
+    check_event_dates(events)
     genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
@@ -79,8 +81,17 @@ def cancel_booking(booking_id):
     ev = db.session.get(Event, b.event_id)
     if ev:
         ev.tickets_left += b.num_tickets
-
     db.session.delete(b)
     db.session.commit()
     flash("Booking cancelled.", "success")
     return redirect(url_for('main.bookings'))
+
+def check_event_dates(events):
+    date_now = (datetime.now()).date()
+    #Iterates through all events and checks if the event date has passed. Not ideal for efficiency but the webapp isn't being continuously run
+    for event in events:
+        #Only updates event status to Inactive if it hasn't been Cancelled. Reasoning: Users might want to know which previous events actually happened and which were cancelled
+        if date_now > event.date and event.status != 'Cancelled':
+            event.status = 'Inactive'
+    db.session.commit()
+    return

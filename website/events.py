@@ -13,16 +13,25 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 events_bp = Blueprint('events', __name__, url_prefix='/events')
-
+date_now = (datetime.now()).date()
 
 
 @events_bp.route('/<int:id>')
 def show(id):
     event = db.session.get(Event, id)
+    #Event status will update to Inactive by viewing the details. 
+    if date_now > event.date and event.status != 'Cancelled':
+        update_event_status(event)
     form = CommentForm()  
     if not event:
         abort(404)
     return render_template('detail.html', event=event, form=form)
+
+#Modified version of check_event_dates function in views.py. Only used to update Inactive events when viewing event details
+def update_event_status(event):
+    event.status = 'Inactive'
+    db.session.commit()
+    return
 
 @events_bp.route('/<id>/comment', methods=['GET', 'POST'])  
 def comment(id):
@@ -75,7 +84,6 @@ def book(id):
 
     flash(f"You successfully booked {qty} ticket(s) for {event.title}.", "success")
     return redirect(url_for("main.bookings"))  
-
 
 @events_bp.route('/<int:id>/create', methods=['GET', 'POST'])
 def create(id):

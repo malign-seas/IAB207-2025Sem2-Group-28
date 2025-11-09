@@ -47,7 +47,7 @@
             <h3 class="mb-0">{{event.title}}</h3>
             <span class="badge {{ 'bg-success' if event.status == 'Open' else
                               'bg-secondary' if event.status == 'Sold Out' else
-                              'bg-warning' if event.status == 'Cancelled' else
+                              'bg-danger' if event.status == 'Cancelled' else
                               'bg-dark' if event.status == 'Inactive'
                             }}">{{event.status}}</span>
           </div>

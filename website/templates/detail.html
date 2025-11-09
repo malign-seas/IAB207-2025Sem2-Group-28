@@ -15,7 +15,7 @@
       <div class="d-flex align-items-center gap-2 mb-2">
         <span class="badge {{ 'bg-success' if event.status == 'Open' else
                               'bg-secondary' if event.status == 'Sold Out' else
-                              'bg-warning' if event.status == 'Cancelled' else
+                              'bg-danger' if event.status == 'Cancelled' else
                               'bg-dark' if event.status == 'Inactive'
                             }}">
           {{ event.status }}
