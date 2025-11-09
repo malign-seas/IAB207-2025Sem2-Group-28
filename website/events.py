@@ -6,7 +6,7 @@ import os
 
 from . import db
 from .models import Event, User, Comment, Booking
-from .forms import EventCreationForm, CommentForm
+from .forms import CancelEventForm, EventCreationForm, CommentForm, EventEditForm
 from flask_login import current_user
 import os
 from werkzeug.utils import secure_filename
@@ -124,3 +124,66 @@ def check_upload_file(form):
     db_upload_path = '/static/img/' + secure_filename(filename)
     fp.save(upload_path)
     return db_upload_path
+
+
+@events_bp.route('/<int:event_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    if event.organiser_id != current_user.id:
+        flash("You don't have permission to edit this event.", "danger")
+        return redirect(url_for('events.manage_events'))
+
+    form = EventEditForm(obj=event)
+
+    if form.validate_on_submit():
+        event.title = form.title.data
+        event.date = form.date.data
+        event.start_time = form.starttime.data
+        event.end_time = form.endtime.data
+        event.genre = form.genre.data
+        event.description = form.description.data
+        event.venue = form.venue.data
+        event.tickets_left = form.tickets.data
+
+        if form.image.data:
+            db_file_path = check_upload_file(form)
+            event.image = db_file_path
+
+        db.session.commit()
+        flash('Event updated successfully!', 'success')
+        return redirect(url_for('events.manage_events'))
+
+    return render_template('edit.html', form=form, event=event)
+
+@events_bp.route('/manage')
+@login_required
+def manage_events():
+    organiser_id = current_user.id
+    events = Event.query.filter_by(organiser_id=organiser_id).all()
+    return render_template('manage_events.html', events=events, CancelEventForm=CancelEventForm)
+
+
+@events_bp.route('/<int:event_id>/cancel', methods=['GET','POST'])
+@login_required
+def cancel_event(event_id):
+    form = CancelEventForm()
+    event = Event.query.get_or_404(event_id)
+
+    if not form.validate_on_submit():
+        flash('Invalid form submission.', 'danger')
+        return redirect(url_for('events.manage_events'))
+
+    if event.organiser_id != current_user.id:
+        flash("You don't have permission to cancel this event.", "danger")
+        return redirect(url_for('events.manage_events'))
+
+    if event.status == 'Cancelled':
+        flash('This event is already cancelled.', 'info')
+        return redirect(url_for('events.manage_events'))
+
+    event.status = 'Cancelled'
+    db.session.commit()
+    flash(f'Event "{event.title}" has been cancelled.', 'warning')
+    return redirect(url_for('events.manage_events'))

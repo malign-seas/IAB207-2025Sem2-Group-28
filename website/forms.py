@@ -47,7 +47,14 @@ class EventCreationForm(FlaskForm):
     image = FileField('Event Image', validators=[FileRequired(message='Image cannot be empty'),FileAllowed(ALLOWED_FILE, message='Only supports PNG, JPG, png, jpg')])
     submit = SubmitField("Create Event")
 
-#Form for creating a comment
+# Form for creating a comment
 class CommentForm(FlaskForm):
     content = TextAreaField('Comment', [InputRequired()])
     submit = SubmitField('Create')
+
+# Form for editing an event
+class EventEditForm(EventCreationForm):
+    submit = SubmitField("Update Event")
+
+class CancelEventForm(FlaskForm):
+    submit = SubmitField('Cancel')
