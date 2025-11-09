@@ -192,6 +192,7 @@ def cancel_event(event_id):
         return redirect(url_for('events.manage_events'))
 
     event.status = 'Cancelled'
+    event.tickets_left = 0
     db.session.commit()
     flash(f'Event "{event.title}" has been cancelled.', 'warning')
     return redirect(url_for('events.manage_events'))
