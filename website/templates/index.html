@@ -14,17 +14,18 @@
         </form>
       </div>
       <div>
-        <label for="cat" class="form-label">Category</label>
-        <select id="cat" class="form-select">
+        <form action="{{url_for('main.select_genre')}}">
+        <label for="cat" class="form-label">Genre</label>
+        <select id="cat" class="form-select" name="genre">
           <option value="all">All</option>
-          <option value="linkin-park">Linkin Park</option>
-          <option value="seether">Seether</option>
-          <option value="paramore">Paramore</option>
-          <option value="pearl-jam">Pearl Jam</option>
-          <option value="alice-in-chains">Alice in Chains</option>
+          <!--Populate genre drop down with distinct genre values from events-->
+          {% for genre in genres %}
+          <option value="{{genre}}">{{genre}}</option>
+          {% endfor %}
         </select>
       </div>
-      <button id="apply" class="btn btn-primary">Apply</button>
+        <button id="apply" class="btn btn-primary" type="submit">Apply</button>
+      </form>
     </div>
 
     <p class="small mb-3">Status badges:
@@ -44,13 +45,16 @@
           <img src="{{event.image}}" alt="Event image" />
           <div class="d-flex justify-content-between align-items-center mt-2">
             <h3 class="mb-0">{{event.title}}</h3>
-            <span class="badge bg-success">{{event.status}}</span>
+            <span class="badge {{ 'bg-success' if event.status == 'Open' else
+                              'bg-secondary' if event.status == 'Sold Out' else
+                              'bg-warning' if event.status == 'Cancelled' else
+                              'bg-dark' if event.status == 'Inactive'
+                            }}">{{event.status}}</span>
           </div>
           <div class="meta">{{event.date}} · {{event.start_time}} - {{event.end_time}} · {{event.venue}}</div>
           <div class="meta">Tickets left: {{event.tickets_left}}</div>
           <div class="mt-2">
-            <a class="btn btn-sm btn-primary" href="{{ url_for('events.show', id=event.id) }}">View</a> <!--Hardcoded id, please change-->
-            <!-- <a class="btn btn-sm btn-outline-primary" href="event.html#book">Book</a> -->
+            <a class="btn btn-sm btn-primary" href="{{ url_for('events.show', id=event.id) }}">View</a> 
           </div>
         </div>
       </div>

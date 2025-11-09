@@ -9,14 +9,26 @@ main_bp = Blueprint('main', __name__)
 def index():
     # home page: list all events
     events = db.session.scalars(db.select(Event)).all()
-    return render_template('index.html', events=events)
+    genres = sorted({event.genre for event in events})
+    return render_template('index.html', events=events, genres=genres)
 
 @main_bp.route('/search')
 def search():
     term = request.args.get('search', '')
     q = f"%{term}%"
     events = db.session.scalars(db.select(Event).where(Event.title.like(q))).all()
-    return render_template('index.html', events=events)
+    genres = sorted({event.genre for event in events})
+    return render_template('index.html', events=events, genres=genres)
+
+@main_bp.route('/genre-select')
+def select_genre():
+    genre = request.args.get('genre', 'all')
+    if genre == "all" :
+        return redirect(url_for('main.index'))
+    else:
+        events = db.session.scalars(db.select(Event).where(Event.genre.like(genre))).all()
+        genres = sorted({event.genre for event in events})
+    return render_template('index.html', events=events, genres=genres)
 
 @main_bp.route('/bookings')
 @login_required
