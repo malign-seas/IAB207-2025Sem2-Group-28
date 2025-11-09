@@ -4,10 +4,11 @@
   
     {% if current_user.is_authenticated %}
       <h4>Welcome, {{ current_user.username }}</h4>
+      <p class="text-muted">Browse events and book tickets for rock events.</p>
     {% else %}
       <h4>Welcome to DivDadRockEvents</h4> 
+      <p class="text-muted">Browse events and <a href="{{ url_for('auth.login') }}">log in</a> to book tickets for rock events.</p>
     {% endif %}
-    <p class="text-muted">Browse events and book tickets for rock events.</p>
 
     <div class="controls d-flex flex-wrap align-items-end gap-2 mb-3">
       <div>

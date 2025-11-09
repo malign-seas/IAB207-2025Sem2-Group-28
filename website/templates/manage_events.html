@@ -8,7 +8,11 @@
         <img src="{{event.image}}" alt="Event image" />
         <div class="d-flex justify-content-between align-items-center mt-2">
           <h3 class="mb-0">{{event.title}}</h3>
-          <span class="badge bg-success">{{event.status}}</span>
+          <span class="badge {{ 'bg-success' if event.status == 'Open' else
+                              'bg-secondary' if event.status == 'Sold Out' else
+                              'bg-danger' if event.status == 'Cancelled' else
+                              'bg-dark' if event.status == 'Inactive'
+                            }}">{{event.status}}</span>
         </div>
         <div class="meta">{{event.date}} · {{event.start_time}} - {{event.end_time}} · {{event.venue}}</div>
         <div class="meta">Tickets left: {{event.tickets_left}}</div>
