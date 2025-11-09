@@ -11,6 +11,7 @@ def index():
     events = db.session.scalars(db.select(Event)).all()
     return render_template('index.html', events=events)
 
+# Search functionality for events
 @main_bp.route('/search')
 def search():
     term = request.args.get('search', '')
