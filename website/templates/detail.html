@@ -64,7 +64,11 @@
                 type="number"
                 class="form-control"
                 min="1"
+                {% if event.tickets_left > 0 %}
                 max="{{ event.tickets_left }}"
+                {% else %}
+                
+                {% endif %}
                 value="1"
                 {% if event.status != 'Open' %}disabled{% endif %}>
             </div>

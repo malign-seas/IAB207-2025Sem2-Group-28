@@ -93,5 +93,6 @@ def check_event_dates(events):
         #Only updates event status to Inactive if it hasn't been Cancelled. Reasoning: Users might want to know which previous events actually happened and which were cancelled
         if date_now > event.date and event.status != 'Cancelled':
             event.status = 'Inactive'
+            event.tickets_left = 0
     db.session.commit()
     return

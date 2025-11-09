@@ -18,7 +18,7 @@ date_now = (datetime.now()).date()
 
 @events_bp.route('/<int:id>')
 def show(id):
-    event = db.session.get(Event, id)
+    event = Event.query.get_or_404(id)
     #Event status will update to Inactive by viewing the details. 
     if date_now > event.date and event.status != 'Cancelled':
         update_event_status(event)
@@ -30,6 +30,7 @@ def show(id):
 #Modified version of check_event_dates function in views.py. Only used to update Inactive events when viewing event details
 def update_event_status(event):
     event.status = 'Inactive'
+    event.tickets_left = 0
     db.session.commit()
     return
 
@@ -54,7 +55,7 @@ def comment(id):
 @events_bp.route('/<int:id>/book', methods=['POST'])
 @login_required
 def book(id):
-    event = db.session.get(Event, id)
+    event = Event.query.get_or_404(id)    
     if not event:
         flash("Event not found.", "danger")
         return redirect(url_for("main.index"))
@@ -63,12 +64,19 @@ def book(id):
     except (TypeError, ValueError):
         qty = 0
 
+    print(qty)
+
     if qty < 1:
         flash("Please select at least 1 ticket.", "warning")
         return redirect(url_for("events.show", id=id))
 
-    if event.tickets_left is None or event.tickets_left < qty:
+    if event.tickets_left < qty and event.tickets_left != 0:
         flash("Not enough tickets left.", "danger")
+        return redirect(url_for("events.show", id=id))
+    
+    if event.tickets_left == 0:
+        event.status = 'Sold Out'
+        db.session.commit()
         return redirect(url_for("events.show", id=id))
 
 
