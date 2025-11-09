@@ -1,4 +1,4 @@
-from website import create_app
+from divdadrockevents import create_app
 # test 2 ibrahim
 # meileen test commit on testing branch
 if __name__ == '__main__':
