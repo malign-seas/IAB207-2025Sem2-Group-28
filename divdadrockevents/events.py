@@ -15,11 +15,11 @@ from datetime import datetime
 events_bp = Blueprint('events', __name__, url_prefix='/events')
 date_now = (datetime.now()).date()
 
-
+# Shows event details.
 @events_bp.route('/<int:id>')
 def show(id):
     event = Event.query.get_or_404(id)
-    #Event status will update to Inactive by viewing the details. 
+    #Will change event status to Cancelled if the event date has passed
     if date_now > event.date and event.status != 'Cancelled':
         update_event_status(event)
     form = CommentForm()  
@@ -34,6 +34,7 @@ def update_event_status(event):
     db.session.commit()
     return
 
+# Comment function
 @events_bp.route('/<id>/comment', methods=['GET', 'POST'])  
 def comment(id):
     form = CommentForm()
@@ -51,6 +52,8 @@ def comment(id):
             return redirect(url_for('events.show', id=id))
         else:
             return redirect(url_for('auth.login'))
+
+# Booking function
 
 @events_bp.route('/<int:id>/book', methods=['POST'])
 @login_required
@@ -93,6 +96,7 @@ def book(id):
     flash(f"You successfully booked {qty} ticket(s) for {event.title}.", "success")
     return redirect(url_for("main.bookings"))  
 
+# Creates a new event
 @events_bp.route('/<int:id>/create', methods=['GET', 'POST'])
 def create(id):
     form = EventCreationForm()
@@ -131,7 +135,7 @@ def create(id):
     return render_template('create.html', id=id, form=form)
 
 
-
+# Checks the uploaded file and returns the path to it
 def check_upload_file(form):
     fp = form.image.data
     filename = fp.filename
@@ -141,7 +145,7 @@ def check_upload_file(form):
     fp.save(upload_path)
     return db_upload_path
 
-
+# Edit event if the event organiser is logged in
 @events_bp.route('/<int:event_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_event(event_id):
@@ -173,6 +177,7 @@ def edit_event(event_id):
 
     return render_template('edit.html', form=form, event=event)
 
+# Renders the template for the Event management webpage
 @events_bp.route('/manage')
 @login_required
 def manage_events():
@@ -180,7 +185,7 @@ def manage_events():
     events = Event.query.filter_by(organiser_id=organiser_id).all()
     return render_template('manage_events.html', events=events, CancelEventForm=CancelEventForm)
 
-
+# Cancel event function
 @events_bp.route('/<int:event_id>/cancel', methods=['GET','POST'])
 @login_required
 def cancel_event(event_id):

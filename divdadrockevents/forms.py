@@ -54,7 +54,9 @@ class CommentForm(FlaskForm):
 
 # Form for editing an event
 class EventEditForm(EventCreationForm):
+    tickets=IntegerField("Tickets Available:", validators=[InputRequired()])
     submit = SubmitField("Update Event")
 
+# Form for editing an event
 class CancelEventForm(FlaskForm):
     submit = SubmitField('Cancel')

@@ -2,7 +2,7 @@
 {% block content %}
 
 <h1 class="h4 mb-3">Your Booking History</h1>
-
+<!--Cancel all bookings button-->
 {% if bookings %}
   <form action="{{ url_for('main.cancel_all_bookings') }}" method="POST" class="mb-3">
     {% if csrf_token %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
@@ -13,6 +13,7 @@
   </form>
 {% endif %}
 
+<!--Shows current user's bookings-->
 <div class="row g-3">
   {% for booking, event in bookings %}
     <div class="col-12 col-md-6">

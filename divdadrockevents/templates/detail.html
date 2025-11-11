@@ -24,15 +24,16 @@
           <span class="badge bg-primary">{{ event.genre }}</span>
         {% endif %}
       </div>
-
+      <!--Event details such as Date, start time, end time, venue, tickets left-->
       <ul class="list-unstyled mb-3">
-        {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
-        {% if event.start_time %}<li><strong>Start Time:</strong> {{ event.start_time }}</li>{% endif %}
-        {% if event.end_time %}<li><strong>End Time:</strong> {{ event.end_time }}</li>{% endif %}
-        {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
+        <li><strong>Date:</strong> {{ event.date }}</li>
+        <li><strong>Start Time:</strong> {{ event.start_time.strftime('%I:%M %p') }}</li>
+        <li><strong>End Time:</strong> {{ event.end_time.strftime('%I:%M %p') }}</li>
+        <li><strong>Venue:</strong> {{ event.venue }}</li>
         <li><strong>Tickets left:</strong> {{ event.tickets_left }}</li>
       </ul>
 
+      <!--Event description-->
       <hr>
       <h4>Details</h4>
       <p>{{ event.description }}</p>
@@ -92,18 +93,19 @@
     </div>
   </div>
 
-  
+  <!--Comment section-->
   <div class="container mt-4">
     <h4>Leave a Comment</h4>
-
     {% if current_user.is_authenticated %}
+      <!--Shows comment form if logged in-->
       {{ render_form(form,"/events/{0}/comment".format(event.id)) }}
     {% else %}
+      <!--Shows message requesting the user to log in if not logged in-->
       <p><a href="{{ url_for('auth.login') }}">Log in</a> to post a comment.</p>
     {% endif %}
 
     <hr>
-
+    <!--Comments-->
     <h4>All Comments</h4>
     {% for comment in event.comments %}
       <div class="mb-3 border-bottom pb-2">

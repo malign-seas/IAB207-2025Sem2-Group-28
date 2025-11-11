@@ -6,11 +6,12 @@ from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
+#Home page where you can view all events
 @main_bp.route('/')
 def index():
     # home page: list all events
     events = db.session.scalars(db.select(Event)).all()
-    check_event_dates(events)
+    check_event_dates(events) # Checks if event date has passed
     genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
@@ -20,9 +21,11 @@ def search():
     term = request.args.get('search', '')
     q = f"%{term}%"
     events = db.session.scalars(db.select(Event).where(Event.title.like(q))).all()
+    check_event_dates(events) # Checks if event date has passed
     genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
+# Function for filtering events by genre
 @main_bp.route('/genre-sort')
 def select_genre():
     genre = request.args.get('genre', 'all')
@@ -33,11 +36,14 @@ def select_genre():
         genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
+# Function for filtering events by status e.g. 'Open'
 @main_bp.route('/status-sort')
 def select_status():
     status = request.args.get('status', 'all')
     events = db.session.scalars(db.select(Event).where(Event.status.like(status))).all()
-    return render_template('index.html', events=events)
+    check_event_dates(events) # Checks if event date has passed
+    genres = sorted({event.genre for event in events})
+    return render_template('index.html', events=events, genres=genres)
 
 @main_bp.route('/bookings')
 @login_required
