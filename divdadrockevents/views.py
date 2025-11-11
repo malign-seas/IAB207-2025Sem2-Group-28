@@ -6,6 +6,7 @@ from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
+#Home page where you can view all events
 @main_bp.route('/')
 def index():
     # home page: list all events
@@ -23,6 +24,7 @@ def search():
     genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
+# Function for filtering events by genre
 @main_bp.route('/genre-sort')
 def select_genre():
     genre = request.args.get('genre', 'all')
@@ -33,6 +35,7 @@ def select_genre():
         genres = sorted({event.genre for event in events})
     return render_template('index.html', events=events, genres=genres)
 
+# Function for filtering events by status e.g. 'Open'
 @main_bp.route('/status-sort')
 def select_status():
     status = request.args.get('status', 'all')

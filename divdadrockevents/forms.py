@@ -56,5 +56,6 @@ class CommentForm(FlaskForm):
 class EventEditForm(EventCreationForm):
     submit = SubmitField("Update Event")
 
+# Form for editing an event
 class CancelEventForm(FlaskForm):
     submit = SubmitField('Cancel')
