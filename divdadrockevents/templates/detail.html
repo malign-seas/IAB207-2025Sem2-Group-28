@@ -26,10 +26,10 @@
       </div>
       <!--Event details such as Date, start time, end time, venue, tickets left-->
       <ul class="list-unstyled mb-3">
-        {% if event.date %}<li><strong>Date:</strong> {{ event.date }}</li>{% endif %}
-        {% if event.start_time %}<li><strong>Start Time:</strong> {{ event.start_time }}</li>{% endif %}
-        {% if event.end_time %}<li><strong>End Time:</strong> {{ event.end_time }}</li>{% endif %}
-        {% if event.venue %}<li><strong>Venue:</strong> {{ event.venue }}</li>{% endif %}
+        <li><strong>Date:</strong> {{ event.date }}</li>
+        <li><strong>Start Time:</strong> {{ event.start_time.strftime('%I:%M %p') }}</li>
+        <li><strong>End Time:</strong> {{ event.end_time.strftime('%I:%M %p') }}</li>
+        <li><strong>Venue:</strong> {{ event.venue }}</li>
         <li><strong>Tickets left:</strong> {{ event.tickets_left }}</li>
       </ul>
 

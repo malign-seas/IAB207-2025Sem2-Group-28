@@ -13,6 +13,7 @@
     <!--Search section-->
     <div class="controls d-flex flex-wrap align-items-end gap-2 mb-3">
       <div>
+        <!--Text search-->
         <label for="q" class="form-label">Search</label>
         <form class="form-inline d-flex flex-nowrap" action="{{url_for('main.search')}}">
           <input type="text" name="search" class="form-control flex-grow-1 my-1 mr-sm-2" id="SearchForm" placeholder="Search for events here">
@@ -20,9 +21,10 @@
         </form>
       </div>
       <div>
+        <!--Search by genre-->
         <form action="{{url_for('main.select_genre')}}">
         <label for="cat" class="form-label">Genre</label>
-        <select id="cat" class="form-select" name="genre">
+        <select id="cat" class="form-select my-1 mr-sm-2" name="genre">
           <option value="all">All</option>
           <!--Populate genre drop down with distinct genre values from events-->
           {% for genre in genres %}
@@ -33,7 +35,7 @@
         <button id="apply" class="btn btn-primary" type="submit">Apply</button>
       </form>
     </div>
-
+    <!--Search by status-->
     <label class="form-label">Status:</label>
     <form class="column" action="{{url_for('main.select_status')}}">
         <div class="mb-3 form-group">
@@ -44,6 +46,7 @@
         </select>
       </div>
     </form>
+    <div><a href="{{url_for('main.index')}}">Undo Search Filters</a></div>
     <hr>
     <div class="row g-3" id="grid">
 
@@ -61,7 +64,7 @@
                               'bg-dark' if event.status == 'Inactive'
                             }}">{{event.status}}</span>
           </div>
-          <div class="meta">{{event.date}} · {{event.start_time}} - {{event.end_time}} · {{event.venue}}</div>
+          <div class="meta">{{event.date}} · {{event.start_time.strftime('%I:%M %p')}} - {{event.end_time.strftime('%I:%M %p')}} · {{event.venue}}</div>
           <div class="meta">Tickets left: {{event.tickets_left}}</div>
           <div class="mt-2">
             <a class="btn btn-sm btn-primary" href="{{ url_for('events.show', id=event.id) }}">View</a> 
